@@ -1,5 +1,7 @@
 # Protocole nadb
 
+[ [:fr:](PROTOCOL.md) | [:gb:](PROTOCOL_en.md) | [:us:](PROTOCOL_en.md) ]
+
 nabd est un serveur TCP/IP et s'interface ainsi avec les daemons des services. Il écoute sur le port 10543.
 Chaque paquet est sur une ligne (CRLF), encodée en JSON. Chaque paquet comprend un slot "type".
 
@@ -12,6 +14,7 @@ Indication de l'état du lapin. Ce paquet est envoyé lors de la connexion et lo
 - `{"type":"state","state":state}`
 
 Le slot `"state"` peut être :
+
 - `"asleep"` : le lapin dort ;
 - `"idle"` : le lapin est éveillé et affiche les infos ;
 - `"interactive"` : le lapin est en mode interactif ;
@@ -40,8 +43,9 @@ Le slot `"animation"`, optionnel, indique l'animation visuelle. S'il est absent,
 
 Tous les slots sont optionnels (`{}` = toutes les leds sont éteintes).
 `color` peut être :
--  un nombre de 0 à 15 représentant une valeur dans la palette originale (0 = noir, 15 = orange)
--  un texte représentant la couleur au format HTML ('#' suivi de 3 octets en hexa) ou symbolique
+
+- un nombre de 0 à 15 représentant une valeur dans la palette originale (0 = noir, 15 = orange)
+- un texte représentant la couleur au format HTML ('#' suivi de 3 octets en hexa) ou symbolique
 
 ## Paquets `ears`
 
@@ -78,9 +82,10 @@ Les slots `"audio"` et `"choreography"` sont optionnels.
 Chaque son peut être :
 
 - une liste de ressources, séparées par des ";", la première trouvée est celle qui sera jouée.
-Chaque ressource est un chemin vers un son tel que `"nabmastodon/communion.wav"`. L'algorithme essaie d'abord dans le sous-répertoire de chaque application correspondant à la langue actuelle du lapin (`"sounds/fr_FR"`) puis dans le répertoire `"sounds"`, les applications dans l'ordre de `"settings.py"`. Si la ressource termine par `"*"` ou `"*.suffixe"`, le son est choisi au hasard dans les éléments du répertoire correspondant.
+  Chaque ressource est un chemin vers un son tel que `"nabmastodon/communion.wav"`. L'algorithme essaie d'abord dans le sous-répertoire de chaque application correspondant à la langue actuelle du lapin (`"sounds/fr_FR"`) puis dans le répertoire `"sounds"`, les applications dans l'ordre de `"settings.py"`. Si la ressource termine par `"*"` ou `"*.suffixe"`, le son est choisi au hasard dans les éléments du répertoire correspondant.
 
 `choreography` peut être :
+
 - une liste de ressources vers les chorégraphies sur le même mécanisme que les sons, dans les répertoires `choreographies` des différentes applications.
 - `"urn:x-chor:streaming"` pour la chorégraphie de streaming avec palette aléatoire.
 - `"urn:x-chor:streaming:N"` pour la chorégraphie de streaming avec palette N.
@@ -160,15 +165,17 @@ Change le mode pour un service donné.
 - `{"type":"mode","request_id":request_id,"mode":mode,"events":events}`
 
 Le slot `"mode"` peut être:
+
 - `"idle"`
 - `"interactive"`
 
 Le slot `"events"`, optionnel, est une liste avec:
+
 - `"asr"`
 - `"button"`
 - `"ears"`
 
-Pour le mode `"idle"`, si `"events"` n'est pas précisé, cela est équivalent à la liste vide: le service ne reçoit aucun événement. Si `"asr"`, `"button"` ou `"ears" ` sont précisés, le service reçoit les événements correspondants lorsque le lapin est éveillé et n'est pas en mode `"interactive"` avec un autre service. Par défaut, le mode est `"idle"`, sans événements.
+Pour le mode `"idle"`, si `"events"` n'est pas précisé, cela est équivalent à la liste vide: le service ne reçoit aucun événement. Si `"asr"`, `"button"` ou `"ears"` sont précisés, le service reçoit les événements correspondants lorsque le lapin est éveillé et n'est pas en mode `"interactive"` avec un autre service. Par défaut, le mode est `"idle"`, sans événements.
 
 Dans le mode `"interactive"`, le service prend la main sur le lapin et reçoit les événéments précisés. Le lapin cesse d'afficher les infos. Un seul service peut être en mode interactif. Si non précisé, le service reçoit tous les événements. Les autres services ne reçoivent pas les événements, le lapin ne joue pas les commmandes et ne s'endort pas. Le mode interactif s'achève lorsque le service envoie un paquet `"mode"` avec le mode `"idle"` (ou lorsque la connexion est rompue).
 
@@ -189,11 +196,13 @@ En particulier, le slot "intent" contient l'intention détectée.
 Signifie aux services que les oreilles ont été bougées.
 En mode `"idle"`, nabd calcule la position en lançant une détection et envoie aux services (pour le mariage d'oreilles).
 Le paquet a alors cette forme :
+
 - `{"type":"ears_event","left":ear_left,"right":ear_right}`
 
 En mode `"interactive"`, nabd envoie le fait que l'oreille a bougé.
 
 Le paquet a alors cette forme :
+
 - `{"type":"ears_event","ear": ear}`
 
 ## Paquets `button_event`
@@ -205,6 +214,7 @@ Signifie aux services que le bouton a été appuyé. Est envoyé aux services qu
 - `{"type":"button_event","event":event}`
 
 Le slot `"event"` peut être:
+
 - `"down"`
 - `"up"`
 - `"click"`
